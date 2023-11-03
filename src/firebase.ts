@@ -1,15 +1,24 @@
 import { initializeApp } from "firebase/app";
-import { getAuth } from 'firebase/auth'
+import { getAuth } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
+import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAakDKJhTRRO3Pid5OOVMKT0pEF7Tdsias",
-  authDomain: "nwitter-reloaded-c27fc.firebaseapp.com",
-  projectId: "nwitter-reloaded-c27fc",
-  storageBucket: "nwitter-reloaded-c27fc.appspot.com",
-  messagingSenderId: "262589880132",
-  appId: "1:262589880132:web:9aec1ba43c06e9abd1a911"
+  apiKey: "AIzaSyANd4yZT54bSK0AcbItj1bqB7q5x78fOT0",
+  authDomain: "nwitter-reloaded.firebaseapp.com",
+  projectId: "nwitter-reloaded",
+  storageBucket: "nwitter-reloaded.appspot.com",
+  messagingSenderId: "597055701730",
+  appId: "1:597055701730:web:ad1f4784fbb491e2a614bb",
 };
 
 const app = initializeApp(firebaseConfig);
 
+// 계정 인증
 export const auth = getAuth(app);
+
+// 저장소
+export const storage = getStorage(app); 
+
+// 데이터베이스
+export const db = getFirestore(app);
