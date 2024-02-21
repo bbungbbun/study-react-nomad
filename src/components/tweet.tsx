@@ -3,7 +3,10 @@ import { ITweet } from "./timeline";
 import { auth, db, storage } from "../firebase";
 import { deleteDoc, doc } from "firebase/firestore";
 import { deleteObject, ref } from "firebase/storage";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import useCreatedDate from "../hooks/useCreatedDate";
+import { render } from "react-dom";
+
 
 const Wrapper = styled.div`
   display: grid;
@@ -56,16 +59,8 @@ const DeleteButton = styled.button`
 
 export default function Tweet({ username, photo, tweet, userId, id, createdAt }: ITweet) {
   const user = auth.currentUser;
-  function dateSetter(createdAt : number){
-    const date = new Date(createdAt)
-    const hours = date.getHours();
-    const minutes = date.getMinutes();
-    let amOrPm = hours > 12 ? '오후' : '오전';
-    let finalHour = hours > 12 ? hours - 12 : hours;
-    
-    return date.getFullYear() + "년 " + (date.getMonth()+1) + "월 " + date.getDate() + "일 " + finalHour + ":" + (minutes > 9 ? minutes.toString() : "0" + minutes.toString()) + " " + amOrPm;
-  }
-  const createdDate = dateSetter(createdAt);
+  const createdDate = useCreatedDate(createdAt)
+  
   const onDelete = async () => {
     const ok = confirm("Are you sure you want to delete this tweet?");
     if (!ok || user?.uid !== userId) return;
