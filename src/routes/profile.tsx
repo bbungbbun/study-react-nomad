@@ -43,13 +43,14 @@ const AvatarUpload = styled.label`
 `;
 
 const AvatarImg = styled.img`
-  width: 100%;
+  height: 100%;
 `;
 const AvatarInput = styled.input`
   display: none;
 `;
 const Name = styled.span`
   font-size: 22px;
+  margin-right: 20px;
 `;
 
 const BtnNameChange = styled.button`

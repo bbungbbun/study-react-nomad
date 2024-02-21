@@ -39,18 +39,6 @@ export default function Timeline() {
         orderBy("createdAt", "desc"),
         limit(25)
       );
-      /* const spanshot = await getDocs(tweetsQuery);
-        const tweets = spanshot.docs.map((doc) => {
-          const { tweet, createdAt, userId, username, photo } = doc.data();
-          return {
-            tweet,
-            createdAt,
-            userId,
-            username,
-            photo,
-            id: doc.id,
-          };
-        }); */
       unsubscribe = await onSnapshot(tweetsQuery, (snapshot) => {
         const tweets = snapshot.docs.map((doc) => {
           const { tweet, createdAt, userId, username, photo } = doc.data();
