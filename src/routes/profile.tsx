@@ -67,7 +67,7 @@ cursor: pointer;
 }
 `;
 
-const BtnNameSubmit = styled.button`
+const BtnNameSubmit = styled.input`
 background-color: #1d9bf0;
 color: white;
 border: none;
@@ -78,6 +78,9 @@ cursor: pointer;
 &:hover,
 &:active {
   opacity: 0.9;
+}
+&:disabled {
+  opacity: 0.5;
 }
 `;
 
@@ -113,6 +116,7 @@ export default function Profile() {
   const [avatar, setAvatar] = useState(user?.photoURL);
   const [userName, setUserName] = useState(user?.displayName);
   const [changeName, setChangeName] = useState(false);
+  const [isLoading, setLoading] = useState(false);
   const [tweets, setTweets] = useState<ITweet[]>([]);
   const onAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const { files } = e.target;
@@ -137,13 +141,15 @@ export default function Profile() {
     e.preventDefault();
     console.log(user)
 
-    if (!user || userName === "") return;
+    if (!user || isLoading || userName === "") return;
     try {
+      setLoading(true);
       await updateProfile(user, { displayName: userName});
     } catch (e) {
       console.log(e);
     } finally {
       setChangeName(false);
+      setLoading(false);
     }
   };
   const fetchTweets = async () => {
@@ -197,9 +203,11 @@ export default function Profile() {
           <NameInput 
             type="text"
             placeholder="변경할 닉네임을 입력하세요"
-            onChange={onChangeName}
-            ></NameInput>
-          <BtnNameSubmit type="submit">submit</BtnNameSubmit>
+            onChange={onChangeName}/>
+          <BtnNameSubmit 
+            type="submit"
+            disabled={isLoading}
+            value={isLoading ? "Updating..." : "submit"}/>
         </Form>
         ) : (
           <div>
