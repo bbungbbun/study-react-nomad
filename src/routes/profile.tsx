@@ -20,6 +20,13 @@ const Wrapper = styled.div`
   flex-direction: column;
   gap: 20px;
 `;
+
+const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+`;
+
 const AvatarUpload = styled.label`
   width: 80px;
   overflow: hidden;
@@ -45,6 +52,54 @@ const Name = styled.span`
   font-size: 22px;
 `;
 
+const BtnNameChange = styled.button`
+background-color: #1d9bf0;
+color: white;
+border: none;
+padding: 10px 20px;
+border-radius: 20px;
+font-size: 16px;
+cursor: pointer;
+&:hover,
+&:active {
+  opacity: 0.9;
+}
+`;
+
+const BtnNameSubmit = styled.button`
+background-color: #1d9bf0;
+color: white;
+border: none;
+padding: 10px 20px;
+border-radius: 20px;
+font-size: 16px;
+cursor: pointer;
+&:hover,
+&:active {
+  opacity: 0.9;
+}
+`;
+
+const NameInput = styled.input`
+  border: 2px solid white;
+  padding: 10px;
+  border-radius: 10px;
+  font-size: 16px;
+  color: white;
+  background-color: black;
+  resize: none;
+  margin-right: 10px;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  &::placeholder {
+    font-size: 16px;
+  }
+  &:focus {
+    outline: none;
+    border-color: #1d9bf0;
+  }
+`;
+
 const Tweets = styled.div`
   display: flex;
   width: 100%;
@@ -55,6 +110,8 @@ const Tweets = styled.div`
 export default function Profile() {
   const user = auth.currentUser;
   const [avatar, setAvatar] = useState(user?.photoURL);
+  const [userName, setUserName] = useState(user?.displayName);
+  const [changeName, setChangeName] = useState(false);
   const [tweets, setTweets] = useState<ITweet[]>([]);
   const onAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const { files } = e.target;
@@ -68,6 +125,24 @@ export default function Profile() {
       await updateProfile(user, {
         photoURL: avatarUrl,
       });
+    }
+  };
+
+  const onChangeName = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setUserName(e.target.value);
+  };
+
+  const onSubmitName = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    console.log(user)
+
+    if (!user || userName === "") return;
+    try {
+      await updateProfile(user, { displayName: userName});
+    } catch (e) {
+      console.log(e);
+    } finally {
+      setChangeName(false);
     }
   };
   const fetchTweets = async () => {
@@ -116,7 +191,21 @@ export default function Profile() {
         type="file"
         accept="image/*"
       />
-      <Name>{user?.displayName ?? "Anonymous"}</Name>
+      {changeName ? (
+        <Form onSubmit={onSubmitName}>
+          <NameInput 
+            type="text"
+            placeholder="변경할 닉네임을 입력하세요"
+            onChange={onChangeName}
+            ></NameInput>
+          <BtnNameSubmit type="submit">submit</BtnNameSubmit>
+        </Form>
+        ) : (
+          <div>
+            <Name>{user?.displayName ?? "Anonymous"}</Name>
+            <BtnNameChange onClick={()=>setChangeName(true)}>change name</BtnNameChange>
+          </div>
+        )}
       <Tweets>
         {tweets.map((tweet) => (
           <Tweet key={tweet.id} {...tweet} />
