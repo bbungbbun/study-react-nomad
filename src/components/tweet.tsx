@@ -3,6 +3,7 @@ import { ITweet } from "./timeline";
 import { auth, db, storage } from "../firebase";
 import { deleteDoc, doc } from "firebase/firestore";
 import { deleteObject, ref } from "firebase/storage";
+import { useState } from "react";
 
 const Wrapper = styled.div`
   display: grid;
@@ -46,8 +47,25 @@ const DeleteButton = styled.button`
   cursor: pointer;
 `;
 
-export default function Tweet({ username, photo, tweet, userId, id }: ITweet) {
+/**
+ * todo
+ * 1. 트윗 수정 기능
+ * 2. 사진 수정 기능
+ * 3. 사진 표시
+ */
+
+export default function Tweet({ username, photo, tweet, userId, id, createdAt }: ITweet) {
   const user = auth.currentUser;
+  function dateSetter(createdAt : number){
+    const date = new Date(createdAt)
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+    let amOrPm = hours > 12 ? '오후' : '오전';
+    let finalHour = hours > 12 ? hours - 12 : hours;
+    
+    return date.getFullYear() + "년 " + (date.getMonth()+1) + "월 " + date.getDate() + "일 " + finalHour + ":" + (minutes > 9 ? minutes.toString() : "0" + minutes.toString()) + " " + amOrPm;
+  }
+  const createdDate = dateSetter(createdAt);
   const onDelete = async () => {
     const ok = confirm("Are you sure you want to delete this tweet?");
     if (!ok || user?.uid !== userId) return;
@@ -70,7 +88,8 @@ export default function Tweet({ username, photo, tweet, userId, id }: ITweet) {
         <Payload>{tweet}</Payload>
         {user?.uid === userId ? (
           <DeleteButton onClick={onDelete}>Delete</DeleteButton>
-        ) : null}
+          ) : null}
+        <Payload>{createdDate}</Payload>
       </Column>
       <Column>{photo ? <Photo src={photo} /> : null}</Column>
     </Wrapper>
