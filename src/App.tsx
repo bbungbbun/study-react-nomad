@@ -3,6 +3,7 @@ import Layout from "./components/layout";
 import Home from "./routes/home";
 import Profile from "./routes/profile";
 import Login from "./routes/login";
+import TestPage from "./routes/TestPage";
 import CreateAccount from "./routes/create-account";
 import { createGlobalStyle, styled } from "styled-components";
 import reset from "styled-reset";
@@ -27,6 +28,10 @@ const router = createBrowserRouter([
       {
         path: "profile",
         element: <Profile />,
+      },
+      {
+        path: "test",
+        element: <TestPage />,
       },
     ],
   },
