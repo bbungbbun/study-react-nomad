@@ -3,10 +3,7 @@ import { ITweet } from "./timeline";
 import { auth, db, storage } from "../firebase";
 import { deleteDoc, doc } from "firebase/firestore";
 import { deleteObject, ref } from "firebase/storage";
-import { useEffect, useState } from "react";
 import useCreatedDate from "../hooks/useCreatedDate";
-import { render } from "react-dom";
-
 
 const Wrapper = styled.div`
   display: grid;
